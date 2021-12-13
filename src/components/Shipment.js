@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import PropTypes from "prop-types";
 
 const Shipment = ({totalPrice}) => {
     const shipping = totalPrice < 500 ? 399 : 99;
@@ -24,6 +25,10 @@ const Shipment = ({totalPrice}) => {
             </div>
         </div>
     )
+}
+
+Shipment.propTypes = {
+    totalPrice: PropTypes.number
 }
 
 export default Shipment;

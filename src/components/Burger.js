@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import PropTypes from "prop-types";
 
 const Burger = ({burger, addOrder}) => {
     const {image, name, price, desc, status, id} = burger;
@@ -26,6 +27,18 @@ const Burger = ({burger, addOrder}) => {
             </div>
         </li>
     )
+}
+
+Burger.propTypes = {
+    burger: PropTypes.shape({
+        id: PropTypes.number,
+        image: PropTypes.string,
+        name: PropTypes.string,
+        price: PropTypes.number,
+        desc: PropTypes.string,
+        status: PropTypes.string,
+    }),
+    addOrder: PropTypes.func
 }
 
 export default Burger; 

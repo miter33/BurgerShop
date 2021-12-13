@@ -1,17 +1,18 @@
 ﻿import React, {useState} from 'react'
 import restaurants from '../sample-restaurants'
+import PropTypes from "prop-types";
 
 const Landing = (props) => {
-    const [display, setDisplay] = useState(false);
+    const [display, toggleDisplay] = useState(false);
     const [restaurant, setRestaurant] = useState(null);
     
     const displayList = () => {
-        setDisplay(!display);
+        toggleDisplay(!display);
     };
 
     const getTitle = (restaurant) => {
         setRestaurant({ title: restaurant.title, url: restaurant.url });
-        setDisplay(!display);
+        toggleDisplay(!display);
     };
 
     const goToRestaurant = () => {
@@ -48,6 +49,10 @@ const Landing = (props) => {
             }
         </div>
     )
+}
+
+Landing.propTypes = {
+    history: PropTypes.object
 }
 
 export default Landing;

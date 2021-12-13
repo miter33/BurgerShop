@@ -5,8 +5,15 @@ import Header from "./Header";
 import sampleBurgers from '../sample-burgers'
 import Burger from "./Burger";
 import base from '../base'
+import PropTypes from "prop-types";
+import SignIn from "./Auth/SignIn";
+import firebase from "firebase/app";
 
 class App extends React.Component {
+    static propTypes = {
+        match: PropTypes.object
+    }
+    
     state = {
         burgers: [],
         order: []
@@ -72,9 +79,7 @@ class App extends React.Component {
     deleteOrder = (id) => {
         let orderCopy = [...this.state.order];
         orderCopy = orderCopy.filter(order => {
-            if(order.orderId !== id) {
-                return order;
-            }
+            return order.orderId !== id && order;
         })
         this.setState({order: orderCopy});
     }
@@ -82,45 +87,51 @@ class App extends React.Component {
     deleteBurger = (id) => {
         let burgersCopy = [...this.state.burgers];
         burgersCopy = burgersCopy.filter(burger => {
-            if(burger.id !== id) {
-                return burger;
-            }
+            return burger.id !== id && burger;
         })
         this.setState({burgers: burgersCopy});
         this.deleteOrder(id);
     }
+    
+    handleLogout = async () => {
+        await firebase.auth().signOut();
+        window.location.reload();
+    }
 
     render() {
         return (
-            <div className='burger-paradise'>
-                <div className='menu'>
-                    <Header/>
-                    <ul className='burgers'>
-                        {
-                            this.state.burgers.length > 0 && 
-                            this.state.burgers.map(burger => {
-                                return <Burger
-                                    key={burger.id}
-                                    burger={burger}
-                                    addOrder={this.addOrder}
-                                />
-                            })
-                        }
-                    </ul>
+            <SignIn>
+                <div className='burger-paradise'>
+                    <div className='menu'>
+                        <Header title={'Hot Burgers'} />
+                        <ul className='burgers'>
+                            {
+                                this.state.burgers.length > 0 && 
+                                this.state.burgers.map(burger => {
+                                    return <Burger
+                                        key={burger.id}
+                                        burger={burger}
+                                        addOrder={this.addOrder}
+                                    />
+                                })
+                            }
+                        </ul>
+                    </div>
+                    <Order
+                        order={this.state.order}
+                        burgers={this.state.burgers}
+                        deleteOrder={this.deleteOrder}
+                    />
+                    <MenuAdmin
+                        deleteBurger={this.deleteBurger}
+                        updateBurger={this.updateBurger}
+                        burgers={this.state.burgers}
+                        addBurger={this.addBurger}
+                        loadSampleBurgers={this.loadSampleBurgers}
+                        handleLogout={this.handleLogout}
+                    />
                 </div>
-                <Order
-                    order={this.state.order}
-                    burgers={this.state.burgers}
-                    deleteOrder={this.deleteOrder}
-                />
-                <MenuAdmin
-                    deleteBurger={this.deleteBurger}
-                    updateBurger={this.updateBurger}
-                    burgers={this.state.burgers}
-                    addBurger={this.addBurger}
-                    loadSampleBurgers={this.loadSampleBurgers}
-                />
-            </div>
+            </SignIn>
         )
     }
 }

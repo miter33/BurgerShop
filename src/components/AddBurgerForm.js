@@ -1,6 +1,7 @@
 ﻿import React from 'react'
+import PropTypes from "prop-types";
 
-const AddBurgerForm = (props) => {
+const AddBurgerForm = ({addBurger}) => {
     const createBurger = (event) => {
         event.preventDefault();
 
@@ -13,7 +14,7 @@ const AddBurgerForm = (props) => {
             image: event.target['image'].value
         };
         
-        props.addBurger(burger);
+        addBurger(burger);
         event.currentTarget.reset();
     }
 
@@ -45,6 +46,10 @@ const AddBurgerForm = (props) => {
             <button type='submit'>+ Add to menu</button>
         </form>
     )
+}
+
+AddBurgerForm.propTypes = {
+    addBurger: PropTypes.func
 }
 
 export default AddBurgerForm;

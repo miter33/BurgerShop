@@ -1,6 +1,7 @@
 ﻿import React from 'react'
+import PropTypes from "prop-types";
 
-const EditBurgerForm = (props) => {
+const EditBurgerForm = ({addBurger, burger, deleteBurger, index, updateBurger}) => {
     const createBurger = (event) => {
         event.preventDefault();
 
@@ -13,29 +14,31 @@ const EditBurgerForm = (props) => {
             image: event.target['image'].value
         };
         
-        props.addBurger(burger);
+        addBurger(burger);
         event.currentTarget.reset();
     }
     
     const handleChange = (event) => {
         const updatedBurger = {
-            ...props.burger,
-            [event.currentTarget.name]: event.currentTarget.value
+            ...burger,
+            [event.currentTarget.name]: event.currentTarget.name === 'price'
+                ? parseFloat(event.currentTarget.value) || 0
+                : event.currentTarget.value
         };
-        props.updateBurger(updatedBurger, props.index)
+        updateBurger(updatedBurger, index)
     }
 
     return (
         <form className='burger-edit' onSubmit={createBurger}>
             <input
                 onChange={handleChange}
-                value={props.burger.name}
+                value={burger.name}
                 name='name'
                 type='text'
             />
             <input
                 onChange={handleChange}
-                value={props.burger.price}
+                value={burger.price}
                 name='price'
                 type='text'
             />
@@ -43,21 +46,36 @@ const EditBurgerForm = (props) => {
                 onChange={handleChange}
                 name='status'
                 className='status' 
-                value={props.burger.status}
+                value={burger.status}
             >
                 <option value='available'>Available</option>
                 <option value='unavailable'>Away from menu</option>
             </select>
-            <textarea onChange={handleChange} value={props.burger.desc} name='desc' />
+            <textarea onChange={handleChange} value={burger.desc} name='desc' />
             <input
                 onChange={handleChange}
-                value={props.burger.image}
+                value={burger.image}
                 name='image'
                 type='text'
             />
-            <button onClick={() => props.deleteBurger(props.burger.id)} type='submit'>Remove from menu</button>
+            <button onClick={() => deleteBurger(burger.id)} type='submit'>Remove from menu</button>
         </form>
     )
+}
+
+EditBurgerForm.propTypes = {
+    addBurger: PropTypes.func,
+    deleteBurger: PropTypes.func,
+    updateBurger: PropTypes.func,
+    index: PropTypes.number,
+    burger: PropTypes.shape({
+        id: PropTypes.number,
+        image: PropTypes.string,
+        name: PropTypes.string,
+        price: PropTypes.number,
+        desc: PropTypes.string,
+        status: PropTypes.string,
+    }),
 }
 
 export default EditBurgerForm;
